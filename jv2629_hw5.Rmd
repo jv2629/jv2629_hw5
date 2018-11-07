@@ -1,0 +1,48 @@
+---
+title: "HW 5"
+author: "Jaclyn Verity - jv2629"
+date: "November 6, 2018"
+output: github_document
+---
+Setup for success!
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rvest)
+knitr::opts_chunk$set(
+  fig.width = 6,
+  fig.asp = .6,
+  out.width = "90%"
+)
+```
+
+## Problem 1
+
+**Reading in the data and making it workable.**
+```{r}
+file_base_con = "./data/con_0"
+
+file_base_exp = "./data/exp_0"
+
+vec_con = str_c(file_base_con, 01:10) %>% str_c(".csv")
+
+vec_exp = str_c(file_base_exp, 01:10) %>% str_c(".csv")
+
+read_cases = function(file_name) {
+  read_csv(file_name)
+}
+
+list_con = map(vec_con, read_cases)
+
+list_exp = map(vec_exp, read_cases)
+
+tbl_con = tibble(list_con) %>% unnest()
+
+tbl_exp = tibble(list_exp) %>% unnest()
+```
+
+**Cleaning up and combining the data.**
+```{r}
+
+```
+
