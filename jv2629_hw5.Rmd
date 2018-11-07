@@ -103,7 +103,6 @@ hom_sum = full_join(hom_total, hom_unsolved)
 
 **Find the proportion of unsolved murders in Baltimore, MD.**
 ```{r}
-
 unsolved_balt = hom_sum %>% 
   filter(str_detect(city_state, "Baltimore, MD")) %>% 
   pull(unsolved_homicide)
@@ -114,10 +113,30 @@ total_balt = hom_sum %>%
 
 ouput_balt = prop.test(unsolved_balt, total_balt)
 
-prop_balt = tibble(broom::tidy(ouput_balt))
+prop_balt = broom::tidy(ouput_balt)
 
 estimate_balt = prop_balt %>% 
   select(estimate, conf.low, conf.high)
 ```
 
+**Now do this for all cities.**
+```{r}
+prop_test_function = function(city_name){
+  
+unsolved = hom_sum %>% 
+  filter(str_detect(city_state, "city_name")) %>% 
+  pull(unsolved_homicide)
+
+total = hom_sum %>% 
+  filter(str_detect(city_state, "city_name")) %>% 
+  pull(total_homicide)
+
+ouput = prop.test(unsolved_balt, total_balt)
+
+prop_balt = broom::tidy(ouput_balt)
+
+estimate_balt = prop_balt %>% 
+  select(estimate, conf.low, conf.high)
+}
+```
 
