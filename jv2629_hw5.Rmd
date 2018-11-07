@@ -43,6 +43,13 @@ tbl_exp = tibble(list_exp) %>% unnest()
 
 **Cleaning up and combining the data.**
 ```{r}
+tbl_con = tbl_con %>% 
+  mutate(subject_id = row_number(),
+         group = "control")
+tbl_exp = tbl_exp %>% 
+  mutate(subject_id = row_number(),
+         group = "experimental")
 
+all_cases = bind_rows(tbl_exp, tbl_con)
 ```
 
