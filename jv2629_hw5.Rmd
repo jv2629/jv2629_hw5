@@ -114,7 +114,10 @@ total_balt = hom_sum %>%
 
 ouput_balt = prop.test(unsolved_balt, total_balt)
 
-broom::tidy(ouput_balt)
+prop_balt = tibble(broom::tidy(ouput_balt))
+
+estimate_balt = prop_balt %>% 
+  select(estimate, conf.low, conf.high)
 ```
 
 
