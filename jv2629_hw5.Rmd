@@ -121,22 +121,16 @@ estimate_balt = prop_balt %>%
 
 **Now do this for all cities.**
 ```{r}
-prop_test_function = function(city_name){
+prop_test_function = function(table){
   
-unsolved = hom_sum %>% 
-  filter(str_detect(city_state, "city_name")) %>% 
-  pull(unsolved_homicide)
+  ouput_prop = prop.test(table$unsolved_homicide, table$total_homicide)
 
-total = hom_sum %>% 
-  filter(str_detect(city_state, "city_name")) %>% 
-  pull(total_homicide)
-
-ouput = prop.test(unsolved_balt, total_balt)
-
-prop_balt = broom::tidy(ouput_balt)
-
-estimate_balt = prop_balt %>% 
+  prop_tidy = broom::tidy(ouput_prop)
+  
+  estimate = prop_tidy %>% 
   select(estimate, conf.low, conf.high)
 }
+
+
 ```
 
