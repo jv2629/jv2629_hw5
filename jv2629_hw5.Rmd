@@ -101,7 +101,9 @@ hom_unsolved = hom_raw %>%
 hom_sum = full_join(hom_total, hom_unsolved) 
 
 hom_sum = hom_sum %>% 
-  slice(-49)
+  slice(-49) %>% 
+  mutate(city_state = as.factor(city_state)) %>% 
+  select(city_state, total_homicide, unsolved_homicide)
   
 ```
 
@@ -145,5 +147,25 @@ Using map function on the list column.
 ```{r}
 map(hom_nest$data, prop_test_function)
 
+case_estimates_tidy = 
+  hom_nest %>% 
+  mutate(
+    unsolved_estimates = map(hom_nest$data, prop_test_function)) %>% 
+  unnest() %>% 
+  janitor::clean_names() %>% 
+  rename(unsolved_prop = estimate)
+
+```
+
+**Creating a plot of the estimates for each city.**
+```{r}
+
+case_estimates_tidy %>% 
+  mutate(city_state = fct_reorder(city_state, unsolved_prop)) %>% 
+ggplot(aes(x = city_state, y = unsolved_prop)) +
+  geom_point() + 
+  geom_errorbar(aes(ymin = conf_low, ymax = conf_high)) +
+  theme(axis.text.x = element_text(angle = 80, hjust = 1)) +
+  labs(x = "City", y = "Proportion of Unsolved Homicides", title = "Proportion of Solved Homicides in Major US Cities")
 ```
 
