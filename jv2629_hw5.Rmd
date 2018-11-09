@@ -98,7 +98,11 @@ hom_unsolved = hom_raw %>%
   filter(str_detect(disposition, "without|Open")) %>%
   summarise(unsolved_homicide = n())
 
-hom_sum = full_join(hom_total, hom_unsolved)
+hom_sum = full_join(hom_total, hom_unsolved) 
+
+hom_sum = hom_sum %>% 
+  slice(-49)
+  
 ```
 
 **Find the proportion of unsolved murders in Baltimore, MD.**
@@ -120,17 +124,26 @@ estimate_balt = prop_balt %>%
 ```
 
 **Now do this for all cities.**
-```{r}
-prop_test_function = function(table){
-  
-  ouput_prop = prop.test(table$unsolved_homicide, table$total_homicide)
 
-  prop_tidy = broom::tidy(ouput_prop)
+Creating the function based on what I did for Baltimore. 
+```{r}
+prop_test_function = function(df){
   
-  estimate = prop_tidy %>% 
+  ouput_prop = prop.test(df$unsolved_homicide, df$total_homicide)
+
+  prop_tidy = broom::tidy(ouput_prop) %>% 
   select(estimate, conf.low, conf.high)
 }
+```
 
+Nesting cities.
+```{r}
+hom_nest = nest(hom_sum, total_homicide:unsolved_homicide)
+```
+
+Using map function on the list column.
+```{r}
+map(hom_nest$data, prop_test_function)
 
 ```
 
